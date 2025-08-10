@@ -6,11 +6,12 @@ import {
   orderBy,
   query,
   serverTimestamp,
-  Timestamp,
-  DocumentData,
   where,
   updateDoc,
+  arrayUnion,
+  arrayRemove,
 } from 'firebase/firestore';
+import type { Timestamp, DocumentData } from 'firebase/firestore';
 import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { db, storage, auth } from './firebase';
@@ -41,6 +42,7 @@ export interface MissingPersonRecord extends PersonData {
   policeNotified: boolean;
   policeStation: PoliceStationInfo;
   caseReferenceId: string;
+  likes?: string[]; // userIds
 }
 
 export interface MissingPersonDoc extends PersonData {
@@ -52,6 +54,7 @@ export interface MissingPersonDoc extends PersonData {
   policeNotified: boolean;
   policeStation: PoliceStationInfo;
   caseReferenceId: string;
+  likes: string[];
 }
 
 const COLLECTION_NAME = 'missingPersons';
@@ -100,11 +103,33 @@ export async function addMissingPerson(
       policeStation: { name: '', phone: '', address: '' },
       caseReferenceId: '',
       reportedAt: serverTimestamp() as unknown as Timestamp,
+      likes: [],
     };
 
     await addDoc(collection(db, COLLECTION_NAME), docData as unknown as DocumentData);
   } catch (error) {
     console.error('addMissingPerson failed:', error);
+    throw error;
+  }
+}
+
+// Likes
+export async function likeReport(reportId: string, userId: string): Promise<void> {
+  try {
+    const refDoc = doc(db, COLLECTION_NAME, reportId);
+    await updateDoc(refDoc, { likes: arrayUnion(userId) });
+  } catch (error) {
+    console.error('likeReport failed:', error);
+    throw error;
+  }
+}
+
+export async function unlikeReport(reportId: string, userId: string): Promise<void> {
+  try {
+    const refDoc = doc(db, COLLECTION_NAME, reportId);
+    await updateDoc(refDoc, { likes: arrayRemove(userId) });
+  } catch (error) {
+    console.error('unlikeReport failed:', error);
     throw error;
   }
 }
@@ -199,6 +224,7 @@ function mapDoc(d: any): MissingPersonDoc {
     policeNotified: Boolean((data as any).policeNotified),
     policeStation: (data as any).policeStation || { name: '', phone: '', address: '' },
     caseReferenceId: (data as any).caseReferenceId || '',
+    likes: Array.isArray((data as any).likes) ? (data as any).likes : [],
     reportedAt: reportedAtTs && typeof reportedAtTs.toDate === 'function' ? reportedAtTs.toDate() : null,
   };
 } 

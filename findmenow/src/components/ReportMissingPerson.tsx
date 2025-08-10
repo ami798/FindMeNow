@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { MissingPersonFormData } from '../types';
 import { addMissingPerson } from '../services/dataService';
+import { auth } from '../firebase';
 
 interface ReportMissingPersonProps {
   onReportSubmitted: () => void;
@@ -29,6 +30,8 @@ const ReportMissingPerson: React.FC<ReportMissingPersonProps> = ({ onReportSubmi
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [photoPreview, setPhotoPreview] = useState<string>('');
+
+  const user = auth.currentUser;
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
@@ -88,9 +91,14 @@ const ReportMissingPerson: React.FC<ReportMissingPersonProps> = ({ onReportSubmi
     }
   };
 
+  const disabled = isSubmitting || !user;
+
   return (
     <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Report Missing Person</h2>
+      <h2 className="text-2xl font-bold text-gray-900 mb-2 text-center">Report Missing Person</h2>
+      {!user && (
+        <p className="mb-4 text-center text-sm text-red-600">Please log in to submit a report.</p>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -162,7 +170,7 @@ const ReportMissingPerson: React.FC<ReportMissingPersonProps> = ({ onReportSubmi
         </div>
 
         <div className="flex justify-end">
-          <button type="submit" disabled={isSubmitting} className="px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200">
+          <button type="submit" disabled={disabled} className="px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200">
             {isSubmitting ? 'Submitting...' : 'Submit Report'}
           </button>
         </div>
