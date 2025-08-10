@@ -1,68 +1,64 @@
+@import "tailwindcss";
+
+/* Theme palettes (switch by setting body class: theme-ocean | theme-sunrise | theme-emerald) */
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --color-primary: #2563eb; /* default ocean */
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-accent: #0ea5e9;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+body.theme-sunrise {
+  --color-primary: #ea580c;
+  --color-primary-600: #ea580c;
+  --color-primary-700: #c2410c;
+  --color-accent: #f59e0b;
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+body.theme-emerald {
+  --color-primary: #10b981;
+  --color-primary-600: #10b981;
+  --color-primary-700: #059669;
+  --color-accent: #22c55e;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* Utility helpers that use the palette variables */
+.btn-primary {
+  background-color: var(--color-primary-600);
+  color: white;
+}
+.btn-primary:hover { background-color: var(--color-primary-700); }
+.text-brand { color: var(--color-primary-600); }
+.bg-brand { background-color: var(--color-primary-600); }
+.border-brand { border-color: var(--color-primary-600); }
+
+/* Card hover lift */
+.card-hover { transition: transform 200ms, box-shadow 200ms; }
+.card-hover:hover { transform: translateY(-2px); }
+
+/* Animations */
+@keyframes fade-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+.animate-fade-up { animation: fade-up 500ms both; }
+.animate-fade-in { animation: fade-in 500ms both; }
+
+/* Reveal-on-scroll helper */
+.reveal { opacity: 0; transform: translateY(12px); transition: opacity 600ms, transform 600ms; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* Custom styles */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  line-clamp: 3;
+  overflow: hidden;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+/* Smooth transitions */
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
 }

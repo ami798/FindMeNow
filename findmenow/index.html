@@ -4,10 +4,27 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
+    <title>FindMeNow</title>
+    <style>
+      /* Minimal inline fallback styles so you see something before React mounts */
+      #root { min-height: 100vh; display: grid; place-items: center; font-family: system-ui, sans-serif; }
+      .fallback { color: #6b7280; font-size: 14px; }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <noscript>
+      <div style="padding:16px; background:#fee2e2; color:#991b1b;">This app requires JavaScript to run.</div>
+    </noscript>
+    <div id="root">
+      <div class="fallback">Loading FindMeNow…</div>
+    </div>
+    <script>
+      // Inline script should run even before React. If you see this reflected on screen, JS is working.
+      (function() {
+        var fb = document.querySelector('.fallback');
+        if (fb) fb.textContent = 'Starting app…';
+      })();
+    </script>
+    <script type="module" src="./src/main.tsx"></script>
   </body>
 </html>
