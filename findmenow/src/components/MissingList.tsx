@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import type { MissingPerson } from '../types';
-import { auth } from '../firebase';
 import { likeReport, unlikeReport } from '../firebaseService';
 
 interface MissingListProps {
@@ -9,9 +8,20 @@ interface MissingListProps {
   onSelect?: (person: MissingPerson) => void;
 }
 
+function getClientId(): string {
+  const KEY = 'fm_client_id';
+  let id = localStorage.getItem(KEY);
+  if (!id) {
+    id = (globalThis.crypto && 'randomUUID' in globalThis.crypto)
+      ? globalThis.crypto.randomUUID()
+      : `${Date.now()}_${Math.floor(Math.random() * 1e9)}`;
+    localStorage.setItem(KEY, id);
+  }
+  return id;
+}
+
 const MissingList: React.FC<MissingListProps> = ({ missingPersons, searchQuery, onSelect }) => {
-  const user = auth.currentUser;
-  const userId = useMemo(() => user?.uid || '', [user]);
+  const userId = useMemo(() => getClientId(), []);
 
   const filteredPersons = missingPersons.filter(person => {
     if (!searchQuery) return true;
@@ -38,10 +48,6 @@ const MissingList: React.FC<MissingListProps> = ({ missingPersons, searchQuery, 
   };
 
   const toggleLike = async (person: MissingPerson) => {
-    if (!userId) {
-      alert('Please log in to like reports');
-      return;
-    }
     const likes = (person as any).likes as string[] | undefined;
     const hasLiked = Array.isArray(likes) && likes.includes(userId);
     try {
@@ -74,7 +80,7 @@ const MissingList: React.FC<MissingListProps> = ({ missingPersons, searchQuery, 
       {filteredPersons.map((person) => {
         const likes = (person as any).likes as string[] | undefined;
         const count = Array.isArray(likes) ? likes.length : 0;
-        const hasLiked = userId && Array.isArray(likes) ? likes.includes(userId) : false;
+        const hasLiked = Array.isArray(likes) ? likes.includes(userId) : false;
         return (
           <div key={person.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200">
             <div className="aspect-[16/9] bg-gray-200 w-full">
