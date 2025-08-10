@@ -10,29 +10,29 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab = 'home', onNavigat
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <header className="bg-white/90 backdrop-blur border-b border-gray-200 sticky top-0 z-40">
-        <div className="max-w-[120rem] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-2">
-              <button onClick={() => onNavigate?.('home')} className="text-left">
-                <h1 className="text-2xl font-extrabold text-brand">FindMeNow</h1>
-                <span className="ml-1 text-xs text-gray-500">Missing Persons Finder</span>
-              </button>
-            </div>
-            <nav className="hidden md:flex space-x-8">
-              <button onClick={() => onNavigate?.('home')} className={`px-3 py-2 text-sm font-medium transition-colors ${activeTab === 'home' ? 'text-brand' : 'text-gray-700 hover:text-brand'}`}>Home</button>
-              <button onClick={() => onNavigate?.('list')} className={`px-3 py-2 text-sm font-medium transition-colors ${activeTab === 'list' ? 'text-brand' : 'text-gray-700 hover:text-brand'}`}>Missing</button>
-              <button onClick={() => onNavigate?.('report')} className={`px-3 py-2 text-sm font-medium transition-colors ${activeTab === 'report' ? 'text-brand' : 'text-gray-700 hover:text-brand'}`}>Report Missing</button>
+            <button onClick={() => onNavigate?.('home')} className="text-left">
+              <div className="flex items-baseline gap-2 whitespace-nowrap">
+                <span className="text-2xl font-extrabold text-brand leading-none">FindMeNow</span>
+                <span className="hidden sm:inline text-xs text-gray-500 leading-none">Missing Persons Finder</span>
+              </div>
+            </button>
+            <nav className="hidden md:flex space-x-6">
+              <button onClick={() => onNavigate?.('home')} className={`px-2 py-2 text-sm font-medium transition-colors ${activeTab === 'home' ? 'text-brand' : 'text-gray-700 hover:text-brand'}`}>Home</button>
+              <button onClick={() => onNavigate?.('list')} className={`px-2 py-2 text-sm font-medium transition-colors ${activeTab === 'list' ? 'text-brand' : 'text-gray-700 hover:text-brand'}`}>Missing</button>
+              <button onClick={() => onNavigate?.('report')} className={`px-2 py-2 text-sm font-medium transition-colors ${activeTab === 'report' ? 'text-brand' : 'text-gray-700 hover:text-brand'}`}>Report Missing</button>
             </nav>
           </div>
         </div>
       </header>
 
       <main className="flex-1">
-        <div className="max-w-[120rem] mx-auto px-4 sm:px-6 lg:px-8 py-8">{children}</div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">{children}</div>
       </main>
 
       <footer className="bg-white border-t border-gray-200">
-        <div className="max-w-[120rem] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <div className="text-2xl font-extrabold text-brand">FindMeNow</div>

@@ -47,6 +47,12 @@ body.theme-emerald {
 .reveal { opacity: 0; transform: translateY(12px); transition: opacity 600ms, transform 600ms; }
 .reveal.visible { opacity: 1; transform: translateY(0); }
 
+/* Horizontal marquee for latest reports */
+@keyframes carousel-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+.carousel-track { animation: carousel-scroll 35s linear infinite; }
+/* Pause on hover via parent group */
+.group:hover .carousel-track { animation-play-state: paused; }
+
 /* Custom styles */
 .line-clamp-3 {
   display: -webkit-box;
